@@ -21,6 +21,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
+  "files": [],
   "exclude": [
     "node_modules",
     "dist",
