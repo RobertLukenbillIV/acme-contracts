@@ -27,6 +27,10 @@ Key tech: TypeScript, Zod, zod-to-openapi, npm workspaces, tsc project reference
   ## Build flow and project references
 
   - The canonical build command is `tsc -b` run from the repo root. This uses TypeScript project references and compiles packages in dependency order so local imports like `@acme/base` resolve during compilation.
+  - **TypeScript configuration structure**:
+    - Root `tsconfig.json` is a references-only container with `"files": []` — it doesn't compile anything itself.
+    - Each package has `"composite": true` in its `tsconfig.json` and extends the root config for shared compiler options.
+    - Package tsconfigs specify their own `outDir`, `rootDir`, `include`, and `references` arrays.
   - When adding a package-to-package dependency, update the dependent package's `tsconfig.json` `references` array to include the referenced package (example: `packages/tickets/tsconfig.json` references `../base`, `../errors`, and `../pagination`). This ensures `tsc -b` knows the compile-time graph.
 
   ## Validation and CI
