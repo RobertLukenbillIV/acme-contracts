@@ -2,7 +2,7 @@ import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 import { writeFileSync, mkdirSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { resolve } from 'path';
 import {
   TicketSchema,
   TicketStatusSchema,
