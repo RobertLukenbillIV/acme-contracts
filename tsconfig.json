@@ -21,7 +21,6 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
-  "include": ["packages/*/src"],
   "exclude": [
     "node_modules",
     "dist",
