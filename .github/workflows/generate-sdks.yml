@@ -7,12 +7,17 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 env:
   OPENAPI_GENERATOR_VERSION: v7.1.0
 
 jobs:
   generate-openapi:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       version: ${{ steps.version.outputs.version }}
     
@@ -48,6 +53,8 @@ jobs:
   generate-typescript-sdk:
     needs: generate-openapi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download OpenAPI specs
@@ -73,6 +80,8 @@ jobs:
   generate-python-sdk:
     needs: generate-openapi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download OpenAPI specs
@@ -98,6 +107,8 @@ jobs:
   generate-java-sdk:
     needs: generate-openapi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download OpenAPI specs
@@ -123,6 +134,8 @@ jobs:
   generate-kotlin-sdk:
     needs: generate-openapi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download OpenAPI specs
@@ -148,6 +161,8 @@ jobs:
   generate-csharp-sdk:
     needs: generate-openapi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download OpenAPI specs
@@ -173,6 +188,8 @@ jobs:
   generate-go-sdk:
     needs: generate-openapi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download OpenAPI specs
@@ -198,6 +215,8 @@ jobs:
   generate-swift-sdk:
     needs: generate-openapi
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download OpenAPI specs

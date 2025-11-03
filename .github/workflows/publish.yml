@@ -9,6 +9,10 @@ on:
         description: 'Version to publish'
         required: true
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish-typescript:
     runs-on: ubuntu-latest
@@ -39,6 +43,9 @@ jobs:
 
   publish-python:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     
     steps:
       - name: Download Python SDK
@@ -67,6 +74,8 @@ jobs:
 
   publish-java:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download Java SDK
@@ -90,6 +99,8 @@ jobs:
 
   publish-csharp:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Download C# SDK
