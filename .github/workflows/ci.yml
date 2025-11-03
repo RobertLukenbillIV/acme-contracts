@@ -16,11 +16,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Ensure no pre-existing build artifacts
-        run: |
-          echo "Removing any packages/*/dist if present"
-          rm -rf packages/*/dist || true
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,10 +24,7 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: |
-          npm ci
-          # after install, some packages may run prepare/build scripts; ensure dist is still clean
-          rm -rf packages/*/dist || true
+        run: npm ci
 
       - name: Validate tsconfig references
         run: npm run validate:tsrefs
@@ -43,35 +35,8 @@ jobs:
       - name: Check formatting
         run: npm run format:check
       
-      - name: Type check (diagnostics + per-package checks)
-        run: |
-          # Build packages in dependency order so referenced outputs exist for downstream checks
-          npm run build
-
-          echo "--- GIT TRACKED FILES ---"
-          git ls-files | sed -n '1,200p' || true
-          echo "--- GIT UNTRACKED FILES (generated) ---"
-          git ls-files --others --exclude-standard | sed -n '1,200p' || true
-
-          echo "--- BEFORE CLEAN (packages tree) ---"
-          find packages -maxdepth 4 -type f -printf "%p\n" || true
-
-          echo "--- CLEANING dist directories ---"
-          rm -rf packages/*/dist || true
-
-          echo "--- AFTER CLEAN (packages tree) ---"
-          find packages -maxdepth 4 -type f -printf "%p\n" || true
-
-          echo "--- RUNNING VERBOSE TS DIAGNOSTICS (captured to ts_diag.log) ---"
-          # capture verbose program/traceResolution output for root tsconfig (do not fail the job here)
-          ./node_modules/.bin/tsc --noEmit --listFiles --traceResolution > ts_diag.log 2>&1 || true
-          echo "--- ts_diag.log (head) ---"
-          sed -n '1,400p' ts_diag.log || true
-
-          echo "--- PER-PACKAGE TYPECHECK (workaround) ---"
-          # Run tsc --build per-package to avoid root program picking up unexpected outputs.
-          # This will be the actual failure signal if type errors exist.
-          ./node_modules/.bin/tsc -b packages/* --noEmit
+      - name: Type check
+        run: npm run typecheck
       
       - name: Run root tests, build and workspace tests
         run: npm run test:root && npm run build && npm run test
