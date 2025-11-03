@@ -1,0 +1,6 @@
+{
+  "packageName": "acme-tickets-sdk",
+  "packageVersion": "1.0.0",
+  "isGoSubmodule": false,
+  "enumClassPrefix": true
+}

@@ -1,0 +1,9 @@
+{
+  "groupId": "com.acme",
+  "artifactId": "acme-tickets-sdk",
+  "artifactVersion": "1.0.0",
+  "library": "okhttp-gson",
+  "apiPackage": "com.acme.tickets.api",
+  "modelPackage": "com.acme.tickets.model",
+  "invokerPackage": "com.acme.tickets"
+}

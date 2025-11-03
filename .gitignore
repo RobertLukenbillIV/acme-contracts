@@ -11,6 +11,7 @@ coverage/
 dist/
 build/
 *.tsbuildinfo
+scripts-dist/
 
 # Misc
 .DS_Store
@@ -43,3 +44,9 @@ openapi/
 
 # SDK outputs
 sdks/
+
+# Generated JS/Map files in scripts
+packages/*/scripts/*.js
+packages/*/scripts/*.js.map
+packages/*/scripts/*.d.ts
+packages/*/scripts/*.d.ts.map

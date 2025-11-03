@@ -1,0 +1,112 @@
+name: Publish SDKs
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish'
+        required: true
+
+jobs:
+  publish-typescript:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build packages
+        run: npm run build
+      
+      - name: Publish to npm
+        run: npm publish --workspaces --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-python:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download Python SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: python-sdk
+          path: sdks/python/
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install build tools
+        run: pip install build twine
+      
+      - name: Build package
+        run: python -m build
+        working-directory: sdks/python
+      
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: sdks/python/dist/
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+  publish-java:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download Java SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: java-sdk
+          path: sdks/java/
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Publish to Maven Central
+        run: mvn deploy
+        working-directory: sdks/java
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+
+  publish-csharp:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download C# SDK
+        uses: actions/download-artifact@v4
+        with:
+          name: csharp-sdk
+          path: sdks/csharp/
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0'
+      
+      - name: Build package
+        run: dotnet pack -c Release
+        working-directory: sdks/csharp
+      
+      - name: Publish to NuGet
+        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        working-directory: sdks/csharp
