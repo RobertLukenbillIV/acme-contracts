@@ -6,4 +6,10 @@
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "scripts"]
+  ,
+  "references": [
+    { "path": "../base" },
+    { "path": "../errors" },
+    { "path": "../pagination" }
+  ]
 }

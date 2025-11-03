@@ -25,6 +25,9 @@ jobs:
       
       - name: Install dependencies
         run: npm ci
+
+      - name: Validate tsconfig references
+        run: npm run validate:tsrefs
       
       - name: Run linter
         run: npm run lint
@@ -35,11 +38,8 @@ jobs:
       - name: Type check
         run: npm run typecheck
       
-      - name: Build packages
-        run: npm run build
-      
-      - name: Run tests
-        run: npm run test
+      - name: Build and run tests
+        run: npm run build && npm run test
       
       - name: Generate OpenAPI specs
         run: npm run generate:openapi

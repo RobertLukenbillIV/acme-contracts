@@ -28,4 +28,11 @@
     "generated",
     "sdks"
   ]
+  ,
+  "references": [
+    { "path": "./packages/base" },
+    { "path": "./packages/errors" },
+    { "path": "./packages/pagination" },
+    { "path": "./packages/tickets" }
+  ]
 }

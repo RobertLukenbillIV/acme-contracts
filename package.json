@@ -7,12 +7,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+  "build": "tsc -b",
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint packages --ext .ts,.tsx",
     "format": "prettier --write \"packages/**/*.{ts,tsx,json,md}\"",
     "format:check": "prettier --check \"packages/**/*.{ts,tsx,json,md}\"",
     "typecheck": "tsc --noEmit",
+  "validate:tsrefs": "node ./scripts/validate-tsrefs.js",
     "generate:openapi": "npm run generate:openapi --workspace=@acme/tickets",
     "generate:sdks": "npm run generate:sdks --workspaces --if-present"
   },
