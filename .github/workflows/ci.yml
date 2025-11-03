@@ -43,20 +43,35 @@ jobs:
       - name: Check formatting
         run: npm run format:check
       
-      - name: Type check (build first to satisfy project references)
+      - name: Type check (diagnostics + per-package checks)
         run: |
-          # Build packages in dependency order so referenced outputs exist for a root typecheck
+          # Build packages in dependency order so referenced outputs exist for downstream checks
           npm run build
-          
-          # debug: show any files under packages before cleaning
-          echo "--- BEFORE CLEAN ---"
-          find packages -maxdepth 3 -type f -printf "%p\n" || true
+
+          echo "--- GIT TRACKED FILES ---"
+          git ls-files | sed -n '1,200p' || true
+          echo "--- GIT UNTRACKED FILES (generated) ---"
+          git ls-files --others --exclude-standard | sed -n '1,200p' || true
+
+          echo "--- BEFORE CLEAN (packages tree) ---"
+          find packages -maxdepth 4 -type f -printf "%p\n" || true
+
           echo "--- CLEANING dist directories ---"
           rm -rf packages/*/dist || true
-          echo "--- AFTER CLEAN ---"
-          find packages -maxdepth 3 -type f -printf "%p\n" || true
-          # run TypeScript check
-          npm run typecheck
+
+          echo "--- AFTER CLEAN (packages tree) ---"
+          find packages -maxdepth 4 -type f -printf "%p\n" || true
+
+          echo "--- RUNNING VERBOSE TS DIAGNOSTICS (captured to ts_diag.log) ---"
+          # capture verbose program/traceResolution output for root tsconfig (do not fail the job here)
+          ./node_modules/.bin/tsc --noEmit --listFiles --traceResolution > ts_diag.log 2>&1 || true
+          echo "--- ts_diag.log (head) ---"
+          sed -n '1,400p' ts_diag.log || true
+
+          echo "--- PER-PACKAGE TYPECHECK (workaround) ---"
+          # Run tsc --build per-package to avoid root program picking up unexpected outputs.
+          # This will be the actual failure signal if type errors exist.
+          ./node_modules/.bin/tsc -b packages/* --noEmit
       
       - name: Run root tests, build and workspace tests
         run: npm run test:root && npm run build && npm run test
