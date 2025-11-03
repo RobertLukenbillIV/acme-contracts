@@ -2,7 +2,7 @@ import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 import { writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { resolve } from 'path';
 import {
   TicketSchema,
   TicketStatusSchema,
@@ -212,11 +212,11 @@ const docs = generator.generateDocument({
   ],
 });
 
-// Write to file
-const outputDir = join(__dirname, '..', '..', '..', 'openapi');
+// Write to file - use resolve for robust path handling
+const outputDir = resolve(process.cwd(), '..', '..', '..', 'openapi');
 mkdirSync(outputDir, { recursive: true });
 
-const outputPath = join(outputDir, 'tickets.openapi.json');
+const outputPath = resolve(outputDir, 'tickets.openapi.json');
 writeFileSync(outputPath, JSON.stringify(docs, null, 2));
 
 console.log(`OpenAPI spec generated: ${outputPath}`);

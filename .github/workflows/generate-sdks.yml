@@ -7,6 +7,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+env:
+  OPENAPI_GENERATOR_VERSION: v7.1.0
+
 jobs:
   generate-openapi:
     runs-on: ubuntu-latest
@@ -59,7 +62,7 @@ jobs:
           generator: typescript-fetch
           openapi-file: openapi/tickets.openapi.json
           config-file: .openapi-generator/typescript-config.json
-          generator-tag: v7.1.0
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
       
       - name: Upload TypeScript SDK
         uses: actions/upload-artifact@v4
@@ -84,7 +87,7 @@ jobs:
           generator: python
           openapi-file: openapi/tickets.openapi.json
           config-file: .openapi-generator/python-config.json
-          generator-tag: v7.1.0
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
       
       - name: Upload Python SDK
         uses: actions/upload-artifact@v4
@@ -109,7 +112,7 @@ jobs:
           generator: java
           openapi-file: openapi/tickets.openapi.json
           config-file: .openapi-generator/java-config.json
-          generator-tag: v7.1.0
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
       
       - name: Upload Java SDK
         uses: actions/upload-artifact@v4
@@ -134,7 +137,7 @@ jobs:
           generator: kotlin
           openapi-file: openapi/tickets.openapi.json
           config-file: .openapi-generator/kotlin-config.json
-          generator-tag: v7.1.0
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
       
       - name: Upload Kotlin SDK
         uses: actions/upload-artifact@v4
@@ -159,7 +162,7 @@ jobs:
           generator: csharp
           openapi-file: openapi/tickets.openapi.json
           config-file: .openapi-generator/csharp-config.json
-          generator-tag: v7.1.0
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
       
       - name: Upload C# SDK
         uses: actions/upload-artifact@v4
@@ -184,7 +187,7 @@ jobs:
           generator: go
           openapi-file: openapi/tickets.openapi.json
           config-file: .openapi-generator/go-config.json
-          generator-tag: v7.1.0
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
       
       - name: Upload Go SDK
         uses: actions/upload-artifact@v4
@@ -209,7 +212,7 @@ jobs:
           generator: swift5
           openapi-file: openapi/tickets.openapi.json
           config-file: .openapi-generator/swift-config.json
-          generator-tag: v7.1.0
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
       
       - name: Upload Swift SDK
         uses: actions/upload-artifact@v4
