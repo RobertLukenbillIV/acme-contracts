@@ -2,7 +2,7 @@ import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 import { OpenAPIRegistry, OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 import { writeFileSync, mkdirSync } from 'fs';
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
 import {
   TicketSchema,
   TicketStatusSchema,
@@ -213,7 +213,7 @@ const docs = generator.generateDocument({
 });
 
 // Write to file - use resolve for robust path handling
-const outputDir = resolve(process.cwd(), '..', '..', '..', 'openapi');
+const outputDir = resolve(__dirname, '..', '..', '..', 'openapi');
 mkdirSync(outputDir, { recursive: true });
 
 const outputPath = resolve(outputDir, 'tickets.openapi.json');
