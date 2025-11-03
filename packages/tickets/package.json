@@ -1,0 +1,24 @@
+{
+  "name": "@acme/tickets",
+  "version": "1.0.0",
+  "description": "Ticket schemas for Acme platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist",
+    "test": "find dist -name '*.test.js' -exec node --test {} +",
+    "generate:openapi": "ts-node --project tsconfig.scripts.json scripts/generate-openapi.ts"
+  },
+  "dependencies": {
+    "@acme/base": "1.0.0",
+    "@acme/errors": "1.0.0",
+    "@acme/pagination": "1.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.2"
+  }
+}
