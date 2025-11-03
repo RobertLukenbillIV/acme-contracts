@@ -9,7 +9,8 @@
   "scripts": {
   "build": "tsc -b",
     "test": "npm run test --workspaces --if-present",
-    "lint": "eslint packages --ext .ts,.tsx",
+  "lint": "eslint packages --ext .ts,.tsx",
+  "test:root": "node --test tests/validate-tsrefs.test.js",
     "format": "prettier --write \"packages/**/*.{ts,tsx,json,md}\"",
     "format:check": "prettier --check \"packages/**/*.{ts,tsx,json,md}\"",
     "typecheck": "tsc --noEmit",
