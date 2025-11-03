@@ -2,12 +2,12 @@
 
 This repository is a TypeScript monorepo (npm workspaces) that defines shared API schemas, Zod validators, and OpenAPI specs used to generate multi-language SDKs. The main packages live under `packages/`:
 
-- `packages/base` — core models and types
-- `packages/errors` — standardized error schemas
-- `packages/pagination` — pagination types and helpers
-- `packages/tickets` — domain models and OpenAPI generation for tickets
+- `packages/base` — core models and types (`BaseEntitySchema`, `TimestampSchema`, `PrioritySchema`)
+- `packages/errors` — standardized error schemas (`ErrorResponseSchema`, `ValidationErrorResponse`)
+- `packages/pagination` — pagination types and helpers (`PaginatedResponseSchema`, `PaginationQuery`)
+- `packages/tickets` — domain models and OpenAPI generation for tickets (`TicketSchema`, CRUD request types)
 
-Key tech: TypeScript, Zod, zod-to-openapi, npm workspaces, tsc project references, and OpenAPI SDK generation.
+Key tech: TypeScript, Zod, `@asteasolutions/zod-to-openapi`, npm workspaces, tsc project references, and OpenAPI SDK generation to 7 languages (TypeScript, Python, Java, Kotlin, C#, Go, Swift).
 
 ## Immediate tasks an AI coding agent should know
 
@@ -18,13 +18,14 @@ Key tech: TypeScript, Zod, zod-to-openapi, npm workspaces, tsc project reference
 ## Project-specific conventions and patterns
 
 - Schema source of truth: Zod schemas in `packages/*/src/*.ts`. Files export both the runtime schema (Zod) and typed exports (e.g., `Ticket`, `CreateTicketRequest`). Use `zod-to-openapi` when creating or extending OpenAPI shapes (see `packages/tickets`).
+- Schema composition: Use `BaseEntitySchema.extend({...})` for entities, `z.enum()` for status values, and import shared types from `@acme/base` (like `PrioritySchema`). Follow the pattern: define schema, export type with `z.infer<typeof Schema>`.
 - Build artifacts: compiled files are emitted to `dist/`. Tests in `package.json` target `dist` files (`find dist -name '*.test.js' -exec node --test {} +`). When adding tests, follow the existing pattern: put `.test.ts` next to sources and rely on the build step to emit test JS.
 - Package references: packages depend on local workspace packages by name (e.g., `@acme/base`). The monorepo uses npm workspaces — do not publish package.json versions manually while working locally; use workspace resolution.
 - Script names to reference in guidance or automation:
   - Root: `build`, `test`, `lint`, `format`, `format:check`, `typecheck`, `generate:openapi`, `generate:sdks`.
   - Package `@acme/tickets`: `generate:openapi` (uses `ts-node` and `tsconfig.scripts.json`).
 
-  ## Build flow and project references
+## Build flow and project references
 
   - The canonical build command is `tsc -b` run from the repo root. This uses TypeScript project references and compiles packages in dependency order so local imports like `@acme/base` resolve during compilation.
   - **TypeScript configuration structure**:
@@ -33,14 +34,14 @@ Key tech: TypeScript, Zod, zod-to-openapi, npm workspaces, tsc project reference
     - Package tsconfigs specify their own `outDir`, `rootDir`, `include`, and `references` arrays.
   - When adding a package-to-package dependency, update the dependent package's `tsconfig.json` `references` array to include the referenced package (example: `packages/tickets/tsconfig.json` references `../base`, `../errors`, and `../pagination`). This ensures `tsc -b` knows the compile-time graph.
 
-  ## Validation and CI
+## Validation and CI
 
-  - There's a lightweight validation script at `scripts/validate-tsrefs.js` and an npm script `validate:tsrefs` that checks `packages/*` for imports of `@acme/*` and ensures the importing package's `tsconfig.json` includes the referenced package under `references`.
-  - CI runs this validation early (`npm run validate:tsrefs`) to fail fast if a `tsconfig` reference is missing. Run it locally before opening PRs.
+- There's a lightweight validation script at `scripts/validate-tsrefs.js` and an npm script `validate:tsrefs` that checks `packages/*` for imports of `@acme/*` and ensures the importing package's `tsconfig.json` includes the referenced package under `references`.
+- CI runs this validation early (`npm run validate:tsrefs`) to fail fast if a `tsconfig` reference is missing. Run it locally before opening PRs.
 
-  ## Short checklist for schema authors
+## Short checklist for schema authors
 
-  - See `docs/SCHEMA_AUTHORING.md` for a concise, step-by-step checklist when adding or modifying Zod schemas; it includes the recommended local commands and the `tsconfig` references rule.
+- See `docs/SCHEMA_AUTHORING.md` for a concise, step-by-step checklist when adding or modifying Zod schemas; it includes the recommended local commands and the `tsconfig` references rule.
 
 
 ## Important files and where to look
@@ -50,6 +51,7 @@ Key tech: TypeScript, Zod, zod-to-openapi, npm workspaces, tsc project reference
 - `packages/tickets/scripts/generate-openapi.ts` — OpenAPI generation entrypoint.
 - `tsconfig.scripts.json` — scripts/CLI ts-node config used by generation scripts.
 - `openapi/` and `.openapi-generator/` — generated specs and SDK generator configs.
+- `.openapi-generator/` contains language-specific config files (e.g., `typescript-config.json`, `python-config.json`) for the 7 supported SDK languages.
 - `packages/*/src` — primary source of truth for schemas and tests.
 
 ## Helpful, concrete examples for edits and PRs
@@ -62,6 +64,7 @@ Key tech: TypeScript, Zod, zod-to-openapi, npm workspaces, tsc project reference
 
 - To update OpenAPI for tickets (local dev):
   - From repo root: `npm run generate:openapi` (this forwards to the `@acme/tickets` workspace script).
+  - The generation script at `packages/tickets/scripts/generate-openapi.ts` registers both schemas AND API paths using `OpenAPIRegistry.registerPath()` with complete CRUD endpoints, query params, and error responses.
 
 ## Constraints and gotchas for an AI agent
 
@@ -72,6 +75,12 @@ Key tech: TypeScript, Zod, zod-to-openapi, npm workspaces, tsc project reference
 ## Where to check CI behavior
 
 - `.github/workflows/` contains CI steps (lint, typecheck, build, test, generate-sdks). Check workflow YAMLs when changing scripts or generation behavior.
+
+## Common troubleshooting
+
+- **Artifact download errors**: GitHub Actions artifacts are workflow-scoped. The `generate-sdks.yml` workflow generates its own OpenAPI specs rather than trying to download from `ci.yml`. Each workflow run uses unique artifact names with `${{ github.run_id }}` to avoid conflicts.
+- **Build failures**: Always run `npm run validate:tsrefs` first - missing TypeScript project references are a common cause of build issues.
+- **Test failures**: Remember tests run against compiled `dist/` output, not source TypeScript files. Run `npm run build` before `npm run test`.
 
 ---
 
