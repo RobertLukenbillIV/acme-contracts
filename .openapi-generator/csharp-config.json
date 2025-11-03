@@ -1,0 +1,6 @@
+{
+  "packageName": "Acme.Tickets.Sdk",
+  "packageVersion": "1.0.0",
+  "targetFramework": "net8.0",
+  "library": "httpclient"
+}

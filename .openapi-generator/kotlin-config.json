@@ -1,0 +1,7 @@
+{
+  "groupId": "com.acme",
+  "artifactId": "acme-tickets-sdk-kotlin",
+  "artifactVersion": "1.0.0",
+  "packageName": "com.acme.tickets",
+  "library": "jvm-okhttp4"
+}

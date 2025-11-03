@@ -1,0 +1,48 @@
+{
+  "name": "acme-contracts",
+  "version": "1.0.0",
+  "description": "Shared API schemas and types for the Acme platform",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+  "build": "tsc -b",
+    "test": "npm run test --workspaces --if-present",
+  "lint": "eslint packages --ext .ts,.tsx",
+  "test:root": "node --test tests/validate-tsrefs.test.js",
+    "format": "prettier --write \"packages/**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"packages/**/*.{ts,tsx,json,md}\"",
+    "typecheck": "tsc --noEmit",
+  "validate:tsrefs": "node ./scripts/validate-tsrefs.js",
+    "generate:openapi": "npm run generate:openapi --workspace=@acme/tickets",
+    "generate:sdks": "npm run generate:sdks --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobertLukenbillIV/acme-contracts.git"
+  },
+  "keywords": [
+    "api",
+    "contracts",
+    "schemas",
+    "types",
+    "openapi",
+    "sdk"
+  ],
+  "author": "",
+  "license": "MIT"
+}

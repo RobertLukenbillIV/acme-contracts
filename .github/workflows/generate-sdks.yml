@@ -1,0 +1,240 @@
+name: Generate SDKs
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  OPENAPI_GENERATOR_VERSION: v7.1.0
+
+jobs:
+  generate-openapi:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build packages
+        run: npm run build
+      
+      - name: Generate OpenAPI specs
+        run: npm run generate:openapi
+      
+      - name: Get version
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      
+      - name: Upload OpenAPI specs
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+
+  generate-typescript-sdk:
+    needs: generate-openapi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download OpenAPI specs
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+      
+      - name: Generate TypeScript SDK
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: typescript-fetch
+          openapi-file: openapi/tickets.openapi.json
+          config-file: .openapi-generator/typescript-config.json
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
+      
+      - name: Upload TypeScript SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: typescript-sdk
+          path: sdks/typescript/
+
+  generate-python-sdk:
+    needs: generate-openapi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download OpenAPI specs
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+      
+      - name: Generate Python SDK
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: python
+          openapi-file: openapi/tickets.openapi.json
+          config-file: .openapi-generator/python-config.json
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
+      
+      - name: Upload Python SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-sdk
+          path: sdks/python/
+
+  generate-java-sdk:
+    needs: generate-openapi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download OpenAPI specs
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+      
+      - name: Generate Java SDK
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: java
+          openapi-file: openapi/tickets.openapi.json
+          config-file: .openapi-generator/java-config.json
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
+      
+      - name: Upload Java SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-sdk
+          path: sdks/java/
+
+  generate-kotlin-sdk:
+    needs: generate-openapi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download OpenAPI specs
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+      
+      - name: Generate Kotlin SDK
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: kotlin
+          openapi-file: openapi/tickets.openapi.json
+          config-file: .openapi-generator/kotlin-config.json
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
+      
+      - name: Upload Kotlin SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kotlin-sdk
+          path: sdks/kotlin/
+
+  generate-csharp-sdk:
+    needs: generate-openapi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download OpenAPI specs
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+      
+      - name: Generate C# SDK
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: csharp
+          openapi-file: openapi/tickets.openapi.json
+          config-file: .openapi-generator/csharp-config.json
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
+      
+      - name: Upload C# SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: csharp-sdk
+          path: sdks/csharp/
+
+  generate-go-sdk:
+    needs: generate-openapi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download OpenAPI specs
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+      
+      - name: Generate Go SDK
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: go
+          openapi-file: openapi/tickets.openapi.json
+          config-file: .openapi-generator/go-config.json
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
+      
+      - name: Upload Go SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-sdk
+          path: sdks/go/
+
+  generate-swift-sdk:
+    needs: generate-openapi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Download OpenAPI specs
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-specs
+          path: openapi/
+      
+      - name: Generate Swift SDK
+        uses: openapi-generators/openapitools-generator-action@v1
+        with:
+          generator: swift5
+          openapi-file: openapi/tickets.openapi.json
+          config-file: .openapi-generator/swift-config.json
+          generator-tag: ${{ env.OPENAPI_GENERATOR_VERSION }}
+      
+      - name: Upload Swift SDK
+        uses: actions/upload-artifact@v4
+        with:
+          name: swift-sdk
+          path: sdks/swift/

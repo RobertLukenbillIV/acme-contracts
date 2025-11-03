@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+generated
+sdks
+coverage
+*.openapi.json
+*.openapi.yaml

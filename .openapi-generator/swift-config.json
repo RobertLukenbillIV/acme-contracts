@@ -1,0 +1,6 @@
+{
+  "projectName": "AcmeTicketsSDK",
+  "podVersion": "1.0.0",
+  "library": "urlsession",
+  "swiftPackagePath": "AcmeTicketsSDK"
+}
