@@ -45,8 +45,14 @@ jobs:
       
       - name: Type check
         run: |
-          # ensure no stale compiled artifacts exist that can confuse tsserver/tsc
+          # debug: show any files under packages before cleaning
+          echo "--- BEFORE CLEAN ---"
+          find packages -maxdepth 3 -type f -printf "%p\n" || true
+          echo "--- CLEANING dist directories ---"
           rm -rf packages/*/dist || true
+          echo "--- AFTER CLEAN ---"
+          find packages -maxdepth 3 -type f -printf "%p\n" || true
+          # run TypeScript check
           npm run typecheck
       
       - name: Run root tests, build and workspace tests
