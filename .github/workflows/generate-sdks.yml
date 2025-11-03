@@ -60,6 +60,9 @@ jobs:
       contents: read
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Download OpenAPI specs
         uses: actions/download-artifact@v4
         with:
@@ -87,6 +90,9 @@ jobs:
       contents: read
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Download OpenAPI specs
         uses: actions/download-artifact@v4
         with:
@@ -114,6 +120,9 @@ jobs:
       contents: read
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Download OpenAPI specs
         uses: actions/download-artifact@v4
         with:
@@ -141,6 +150,9 @@ jobs:
       contents: read
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Download OpenAPI specs
         uses: actions/download-artifact@v4
         with:
@@ -168,6 +180,9 @@ jobs:
       contents: read
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Download OpenAPI specs
         uses: actions/download-artifact@v4
         with:
@@ -195,6 +210,9 @@ jobs:
       contents: read
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Download OpenAPI specs
         uses: actions/download-artifact@v4
         with:
@@ -222,6 +240,9 @@ jobs:
       contents: read
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Download OpenAPI specs
         uses: actions/download-artifact@v4
         with:
