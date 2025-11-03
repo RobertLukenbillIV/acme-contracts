@@ -78,7 +78,7 @@ Key tech: TypeScript, Zod, `@asteasolutions/zod-to-openapi`, npm workspaces, tsc
 
 ## Common troubleshooting
 
-- **Artifact download errors**: GitHub Actions artifacts are workflow-scoped. The `generate-sdks.yml` workflow generates its own OpenAPI specs rather than trying to download from `ci.yml`. Each workflow run uses unique artifact names with `${{ github.run_id }}` to avoid conflicts.
+- **Artifact download errors**: GitHub Actions artifacts are workflow-scoped. The `generate-sdks.yml` workflow generates its own OpenAPI specs rather than trying to download from `ci.yml`. Artifacts are shared within the same workflow run using consistent naming.
 - **Build failures**: Always run `npm run validate:tsrefs` first - missing TypeScript project references are a common cause of build issues.
 - **Test failures**: Remember tests run against compiled `dist/` output, not source TypeScript files. Run `npm run build` before `npm run test`.
 
