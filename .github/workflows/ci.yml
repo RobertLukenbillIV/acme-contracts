@@ -16,6 +16,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Ensure no pre-existing build artifacts
+        run: |
+          echo "Removing any packages/*/dist if present"
+          rm -rf packages/*/dist || true
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,7 +29,10 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          # after install, some packages may run prepare/build scripts; ensure dist is still clean
+          rm -rf packages/*/dist || true
 
       - name: Validate tsconfig references
         run: npm run validate:tsrefs
