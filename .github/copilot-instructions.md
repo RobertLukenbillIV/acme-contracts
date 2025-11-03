@@ -75,6 +75,7 @@ Key tech: TypeScript, Zod, `@asteasolutions/zod-to-openapi`, npm workspaces, tsc
 ## Where to check CI behavior
 
 - `.github/workflows/` contains CI steps (lint, typecheck, build, test, generate-sdks). Check workflow YAMLs when changing scripts or generation behavior.
+- `deploy-staging.yml` triggers Render deployments via webhook - requires `RENDER_DEPLOY_HOOK_URL` secret to be set in repository settings.
 
 ## Common troubleshooting
 
