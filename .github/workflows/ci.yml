@@ -43,8 +43,11 @@ jobs:
       - name: Check formatting
         run: npm run format:check
       
-      - name: Type check
+      - name: Type check (build first to satisfy project references)
         run: |
+          # Build packages in dependency order so referenced outputs exist for a root typecheck
+          npm run build
+          
           # debug: show any files under packages before cleaning
           echo "--- BEFORE CLEAN ---"
           find packages -maxdepth 3 -type f -printf "%p\n" || true
