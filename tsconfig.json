@@ -23,6 +23,7 @@
     { "path": "./packages/base" },
     { "path": "./packages/errors" },
     { "path": "./packages/pagination" },
+    { "path": "./packages/auth" },
     { "path": "./packages/tickets" }
   ]
 }
