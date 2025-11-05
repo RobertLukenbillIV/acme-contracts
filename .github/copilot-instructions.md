@@ -5,6 +5,7 @@ This repository is a TypeScript monorepo (npm workspaces) that defines shared AP
 - `packages/base` — core models and types (`BaseEntitySchema`, `TimestampSchema`, `PrioritySchema`)
 - `packages/errors` — standardized error schemas (`ErrorResponseSchema`, `ValidationErrorResponse`)
 - `packages/pagination` — pagination types and helpers (`PaginatedResponseSchema`, `PaginationQuery`)
+- `packages/auth` — authentication schemas (`SignupRequest`, `LoginRequest`, `AuthResponse`, `UserResponse`)
 - `packages/tickets` — domain models and OpenAPI generation for tickets (`TicketSchema`, CRUD request types)
 
 Key tech: TypeScript, Zod, `@asteasolutions/zod-to-openapi`, npm workspaces, tsc project references, and OpenAPI SDK generation to 7 languages (TypeScript, Python, Java, Kotlin, C#, Go, Swift).

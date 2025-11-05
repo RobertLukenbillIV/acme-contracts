@@ -8,6 +8,7 @@ This monorepo contains:
 - **Base Models**: Core types and schemas used across all domains
 - **Error Schemas**: Standardized error responses and validation errors
 - **Pagination Schemas**: Offset and cursor-based pagination types
+- **Auth Schemas**: Authentication and authorization request/response schemas
 - **Ticket Schema**: Complete ticket management domain models
 - **OpenAPI Specifications**: Auto-generated API documentation
 - **Multi-language SDKs**: Generated clients for TypeScript, Python, Java, Kotlin, C#, Go, and Swift
@@ -20,6 +21,7 @@ acme-contracts/
 │   ├── base/           # Base models and types
 │   ├── errors/         # Error schemas
 │   ├── pagination/     # Pagination schemas
+│   ├── auth/           # Auth schemas
 │   └── tickets/        # Ticket domain schemas
 ├── .openapi-generator/ # SDK generation configs
 ├── .github/workflows/  # CI/CD workflows
@@ -43,6 +45,7 @@ npm run test
 npm install @acme/base
 npm install @acme/errors
 npm install @acme/pagination
+npm install @acme/auth
 npm install @acme/tickets
 ```
 
@@ -54,6 +57,18 @@ npm install @acme/tickets
 import { Ticket, CreateTicketRequest, TicketStatus } from '@acme/tickets';
 import { PaginatedResponse } from '@acme/pagination';
 import { ErrorResponse } from '@acme/errors';
+import { SignupRequest, LoginRequest, AuthResponse, UserResponse } from '@acme/auth';
+
+// Create a signup request
+const signupRequest: SignupRequest = {
+  email: 'user@example.com',
+  password: 'SecurePass123!',
+  name: 'John Doe',
+};
+
+// Validate with Zod
+import { SignupRequestSchema } from '@acme/auth';
+const validatedSignup = SignupRequestSchema.parse(signupRequest);
 
 // Create a ticket request
 const createRequest: CreateTicketRequest = {
@@ -115,6 +130,15 @@ Pagination utilities:
 - `PaginationMeta` - Pagination metadata
 - `PaginatedResponse` - Generic paginated response
 - `CursorPaginationQuery` - Cursor-based pagination
+
+### @acme/auth
+
+Authentication schemas:
+- `SignupRequest` - User registration request
+- `LoginRequest` - User login request
+- `RefreshTokenRequest` - Refresh token request
+- `AuthResponse` - Authentication response with tokens
+- `UserResponse` - User information response
 
 ### @acme/tickets
 
